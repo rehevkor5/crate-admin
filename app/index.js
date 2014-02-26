@@ -11,6 +11,8 @@ require.config({
         underscore: 'bower_components/underscore/underscore',
         spin: 'bower_components/ladda-bootstrap/dist/spin',
         ladda: 'bower_components/ladda-bootstrap/dist/ladda',
+        raphael: 'bower_components/raphael/raphael',
+        morris: 'bower_components/morris.js/morris',
 
         // App
         app: 'js/app',
@@ -35,6 +37,11 @@ require.config({
 
         underscore: {
             exports: '_'
+        },
+
+        morris: {
+            deps: ['jquery', 'raphael'],
+            exports: 'Morris'
         }
     }
 });
