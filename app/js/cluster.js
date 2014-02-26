@@ -3,11 +3,12 @@ define(['jquery',
         'backbone',
         'base',
         'SQL',
+        'morris',
         'text!views/cluster.html',
         'text!views/nodelistitem.html',
         'text!views/nodeinfo.html',
         'bootstrap',
-    ], function ($, _, Backbone, base, SQL, ClusterTemplate, NodeListItemTemplate, NodeInfoTemplate) {
+    ], function ($, _, Backbone, base, SQL, Morris, ClusterTemplate, NodeListItemTemplate, NodeInfoTemplate) {
 
     var Cluster = {};
 
@@ -156,6 +157,21 @@ define(['jquery',
             data.fsUsed = base.humanReadableSize(data.fs.used);
             data.httpLink = this.model.httpLink();
             this.$el.html(this.template(data));
+            Morris.Donut({
+                element: this.$('#disk-usage-graph'),
+                data: [
+                    {label: 'free', value: this.model.get('fs').free},
+                    {label: 'used', value: this.model.get('fs').used}],
+                formatter: function (y, data) { return base.humanReadableSize(y); }
+            });
+
+            Morris.Donut({
+                element: this.$('#mem-usage-graph'),
+                data: [
+                    {label: 'free', value: this.model.get('mem').free},
+                    {label: 'used', value: this.model.get('mem').used}],
+                formatter: function (y, data) { return base.humanReadableSize(y); }
+            });
             return this;
         }
 
