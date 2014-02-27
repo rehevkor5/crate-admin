@@ -9,6 +9,8 @@ define(['jquery',
 
     var Status = {};
 
+    Status._refreshTimeout = 5000;
+
     Status.ClusterStatus = Backbone.Model.extend({
 
         defaults: {
@@ -173,7 +175,7 @@ define(['jquery',
                 });
             this._updateHealth();
             this._updateTableStatus();
-            setTimeout(function () { self.fetch(); }, 5000);
+            setTimeout(function () { self.fetch(); }, Status._refreshTimeout);
         },
 
     });
@@ -181,7 +183,7 @@ define(['jquery',
 
     Status.StatusView = base.CrateView.extend({
 
-        el: '#statusbar',
+        el: '#topstatusbar',
         template: _.template(StatusBarTemplate),
         model: Status.ClusterStatus,
 

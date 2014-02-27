@@ -12,6 +12,8 @@ define(['jquery',
 
     var Cluster = {};
 
+    Cluster._refreshTimeout = 5000;
+
     Cluster.Node = Backbone.Model.extend({
 
         health: function () {
@@ -37,6 +39,23 @@ define(['jquery',
     Cluster.Cluster = Backbone.Collection.extend({
 
         model: Cluster.Node,
+
+        comparator: function (item) {
+            var health = item.healthStatus();
+
+            switch (health) {
+                case 'critical':
+                    health = '0';
+                    break;
+                case 'warning':
+                    health = '1';
+                    break;
+                case 'good':
+                    health = '2';
+                    break;
+            }
+            return health + item.get('name');
+        },
 
         fetch: function (options) {
             var self = this,
@@ -71,13 +90,15 @@ define(['jquery',
         initialize: function () {
             var self = this;
             this.listenTo(this.collection, 'reset', this.render);
-            this.refreshTimeout = setTimeout(function () { self.refresh(); }, 5000);
+            this.listenTo(this.collection, 'add', this.addNode);
+            this.listenTo(this.collection, 'remove', this.removeNode);
+            this.refreshTimeout = setTimeout(function () { self.refresh(); }, Cluster._refreshTimeout);
         },
 
         refresh: function () {
             var self = this;
             this.collection.fetch();
-            this.refreshTimeout = setTimeout(function () { self.refresh(); }, 5000);
+            this.refreshTimeout = setTimeout(function () { self.refresh(); }, Cluster._refreshTimeout);
         },
 
         deactivateAll: function () {
@@ -91,16 +112,28 @@ define(['jquery',
             this.selectedItem = name;
         },
 
+        addNode: function (node) {
+            var v = new Cluster.NodeListItemView({model: node});
+            this.$('ul').append(v.render().$el);
+            this.addView(node.id, v);
+
+        },
+
+        removeNode: function (node) {
+            if (_.has(this.subviews, node.id)) {
+                this.subviews[node.id].dispose();
+            }
+        },
+
         render: function () {
             var self = this;
             this.$el.html(this.template());
             _.each(this.collection.models, function (node) {
-                var v = new Cluster.NodeListItemView({model: node});
-                self.$('ul').append(v.render().$el);
-                self.addView(node.get('name'), v);
+                self.addNode(node);
             });
             if (!this.selectedItem && this.collection.length) {
                 this.showDetails(this.collection.first().id);
+                this.$('#sidebar-wrapper ul').children().first().addClass('active');
             }
             return this;
         },
