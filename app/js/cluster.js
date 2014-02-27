@@ -190,6 +190,7 @@ define(['jquery',
             data.fsUsed = base.humanReadableSize(data.fs.used);
             data.httpLink = this.model.httpLink();
             this.$el.html(this.template(data));
+
             Morris.Donut({
                 element: this.$('#disk-usage-graph'),
                 data: [
@@ -205,6 +206,7 @@ define(['jquery',
                     {label: 'used', value: this.model.get('mem').used}],
                 formatter: function (y, data) { return base.humanReadableSize(y); }
             });
+
             return this;
         }
 
