@@ -5,6 +5,24 @@ Changes for Crate Data
 unreleased
 ==========
 
+
+2014/02/27 0.1.0
+================
+
+ - Handle edge case where there are no tables in overview, table view
+
+ - Fix load graph to behave with bootstrap/jQuery
+
+ - Allow for multiple views in the content area
+
+
+2014/02/26 0.0.9
+================
+
+ - Fix visual glitches for different devices and screen widths
+
+ - Show graph of load over time on Overview view
+
  - Handle add/remove events of nodes on the Cluster view
 
  - Handle add/remove events of tables on the TableList view

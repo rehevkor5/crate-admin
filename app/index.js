@@ -13,6 +13,7 @@ require.config({
         ladda: 'bower_components/ladda-bootstrap/dist/ladda',
         raphael: 'bower_components/raphael/raphael',
         morris: 'bower_components/morris.js/morris',
+        flot: 'bower_components/flot/jquery.flot',
 
         // App
         app: 'js/app',
@@ -43,6 +44,10 @@ require.config({
         morris: {
             deps: ['jquery', 'raphael'],
             exports: 'Morris'
+        },
+
+        flot: {
+            deps: ['jquery']
         }
     }
 });
