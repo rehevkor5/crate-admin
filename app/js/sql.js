@@ -19,7 +19,8 @@ define(['jquery', 'underscore'], function ($, _) {
             if (args !== undefined) {
                 data.args = args;
             }
-            d = $.post('/_sql', JSON.stringify(data));
+
+            d = $.post('http://localhost:4200/_sql', JSON.stringify(data));
             return d;
         }
 

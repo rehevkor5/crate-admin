@@ -56,7 +56,7 @@ define(['jquery',
         fetch: function () {
             var self = this,
                 load, i;
-            $.get('/_nodes/stats?all=true')
+            $.get('http://localhost:4200/_nodes/stats?all=true')
                 .done(function (data) {
                     var load = self._normalizeClusterLoad(data.nodes);
                     self._updateLoadHistory(load);
