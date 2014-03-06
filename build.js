@@ -1,6 +1,6 @@
 ({
     baseUrl: "app",
-    out: "bundle.js",
+    out: "app/bundle.js",
     name: "almond",
     include: "main",
     insertRequire: ["main"],
