@@ -14,5 +14,6 @@
     "ladda-bootstrap": "~0.1.0"
   },
   "devDependencies": {
+    "almond": "~0.2.9"
   }
 }
