@@ -8,6 +8,5 @@ bower_components
 *.DS_Store
 /node_modules/
 *.egg-info
-eggs
+eggs/
 bundle.js
-
