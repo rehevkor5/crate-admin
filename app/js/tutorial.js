@@ -14,7 +14,6 @@ define(['jquery',
     if (!host) {
       host = "http://localhost:4200/_plugin/crate-admin";
     }
-
     var Twitter = function () {
 
         _.extend(this, Backbone.Events);

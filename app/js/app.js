@@ -14,7 +14,7 @@ define([
 
     var app = _.extend({
 
-        host: null,
+        host: 'http://localhost:4200',
         root: '/_plugin/crate-admin',
         refreshTimeout: null,
 
@@ -24,7 +24,9 @@ define([
             var sb, ov;
 
             // Setup
-            app.host = location.protocol + '//' + location.host;
+            if (location.protocol.indexOf('http') !== -1) {
+                app.host = location.protocol + '//' + location.host;
+            }
 
             SQL.host = app.host;
             app.status = new Status.ClusterStatus({host: app.host});
