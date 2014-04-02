@@ -19,13 +19,27 @@ If you already have installer ``bower`` skip the following steps::
 
     bin/buildout -N
 
-To build the app simply run ``bower`` in this crate-admin folder::
+To build the app simply run ``npm`` and ``bower`` in this crate-admin folder::
 
+    bin/npm install
     bin/bower install
 
-Or if you haven't used ``buildout`` and installed ``bower`` globally::
+Or if you haven't used ``buildout`` and installed ``npm`` and ``bower`` globally::
 
+    npm install
     bower install
+
+To develop start dev server that runs on ``localhost:9000``::
+
+    bin/grunt dev_server
+
+Visit the url in the browser and specify a ``base_uri`` of the cluster::
+
+    http://localhost:9000/?base_uri=http://localhost:4200
+
+Create distribution::
+
+    bin/grunt build
 
 .. _Crate Data: https://github.com/crate/crate
 
