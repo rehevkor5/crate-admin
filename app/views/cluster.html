@@ -59,7 +59,7 @@
           <div class="panel panel-info text-right" ng-class="{ 'panel-warning': node.mem.used_percent >= percentageLimitYellow, 'panel-danger': node.mem.used_percent >= percentageLimitRed }">
             <div class="panel-heading">
               <p class="announcement-heading inline-block" data-toggle="tooltip" rel="tooltip" data-original-title="{{node.mem.used | number:0}}">{{node.mem.used | bytes}}</p>
-              <p class="announcement-text">Used HEAP</p>
+              <p class="announcement-text">Used Memory</p>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
           <div class="panel panel-info text-right">
             <div class="panel-heading">
               <p class="announcement-heading inline-block" data-toggle="tooltip" rel="tooltip" data-original-title="{{node.mem.total | number:0}}">{{node.mem.total | bytes}}</p>
-              <p class="announcement-text">Total HEAP</p>
+              <p class="announcement-text">Total Memory</p>
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
           <div class="panel panel-info text-right">
             <div class="panel-heading">
               <p class="announcement-heading inline-block" data-toggle="tooltip" rel="tooltip" data-original-title="{{node.mem.used_percent|number:1}}%">{{node.mem.used_percent|number:1 }}%</p>
-              <p class="announcement-text">% Used HEAP</p>
+              <p class="announcement-text">% Used Memory</p>
             </div>
           </div>
         </div>

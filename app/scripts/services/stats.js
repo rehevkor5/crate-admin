@@ -19,7 +19,6 @@ angular.module('stats', ['sql'])
 
     var checkReachability = function checkReachability(){
       var baseURI = $.cookie("base_uri") || null;
-      console.log("checkReachability", baseURI);
       if (baseURI) {
         $http.get(baseURI+"/").success(function() {
           setReachability(true);

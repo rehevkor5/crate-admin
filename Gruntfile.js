@@ -1,105 +1,43 @@
-// Generated on 2013-07-01 using generator-angular 0.3.0
 'use strict';
-var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
+
 var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
-
-var CRATE_THEME_VERSION = '0.0.9';
-
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-  // configurable paths
-  var yeomanConfig = {
-    app: 'app',
-    dist: 'dist'
-  };
-
-  try {
-    yeomanConfig.app = require('./bower.json').appPath || yeomanConfig.app;
-  } catch (e) {}
+  var bower = require('./bower.json');
+  var pkg = require('./package.json');
 
   grunt.initConfig({
-    yeoman: yeomanConfig,
+    crate: {
+      version: bower.version,
+      app: bower.appPath || 'app',
+      dist: 'dist',
+      tmp: '.tmp'
+    },
     watch: {
-      coffee: {
-        files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
-        tasks: ['coffee:dist']
-      },
-      coffeeTest: {
-        files: ['test/spec/{,*/}*.coffee'],
-        tasks: ['coffee:test']
-      },
       recess: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.less'],
+        files: ['<%= crate.app %>/styles/{,*/}*.less'],
         tasks: ['recess:dist']
-      },
-      livereload: {
-        options: {
-          livereload: LIVERELOAD_PORT
-        },
-        files: [
-          '<%= yeoman.app %>/{,*/}*.html',
-          '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
       }
     },
     connect: {
       options: {
         port: 9000,
-        // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost',
         path: '/?base_uri=http://localhost:4200'
       },
       dev: {
         options: {
-          base: "app",
+          base: '<%= crate.app %>',
           keepalive: true,
           middleware: function (connect) {
             return [
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
-            ];
-          }
-        }
-      },
-      livereload: {
-        options: {
-          middleware: function (connect) {
-            return [
-              lrSnippet,
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
-            ];
-          }
-        }
-      },
-      test: {
-        options: {
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'test')
-            ];
-          }
-        }
-      },
-      dist: {
-        options: {
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, yeomanConfig.dist)
+              mountFolder(connect, '<%= crate.tmp %>'),
+              mountFolder(connect, '<%= crate.app %>')
             ];
           }
         }
@@ -107,7 +45,7 @@ module.exports = function (grunt) {
     },
     open: {
       server: {
-        url: 'http://<%= connect.options.hostname =%>:<%= connect.options.port %><%= connect.options.path %>'
+        url: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/<%= connect.options.path %>'
       }
     },
     clean: {
@@ -115,14 +53,20 @@ module.exports = function (grunt) {
         files: [{
           dot: true,
           src: [
-            '.tmp',
-            '<%= yeoman.dist %>/*',
-            '!<%= yeoman.dist %>/.git*'
+            '<%= crate.tmp %>',
+            '<%= crate.dist %>/*',
+            '!<%= crate.dist %>/.git*'
           ]
         }]
       },
-      server: '.tmp',
-      crate_theme: 'tmp/*'
+      components: {
+        files: [{
+          src: [
+            '<%= crate.dist %>/bower_components'
+          ]
+        }]
+      },
+      server: '<%= crate.tmp %>'
     },
     jshint: {
       options: {
@@ -130,28 +74,8 @@ module.exports = function (grunt) {
       },
       all: [
         'Gruntfile.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js'
+        '<%= crate.app %>/scripts/{,*/}*.js'
       ]
-    },
-    coffee: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/scripts',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
-      }
     },
     recess: {
       dist: {
@@ -160,50 +84,45 @@ module.exports = function (grunt) {
         },
         files: [{
             expand: true,
-            cwd: '<%= yeoman.app %>/styles',
+            cwd: '<%= crate.app %>/styles',
             src: 'main.less',
-            dest: '.tmp/styles/',
+            dest: '<%= crate.tmp %>/styles/',
             ext: '.css'
         }]
       }
     },
-    // not used since Uglify task does concat,
-    // but still available if needed
-    /*concat: {
-      dist: {}
-    },*/
     rev: {
       dist: {
         files: {
           src: [
-            '<%= yeoman.dist %>/scripts/{,*/}*.js',
-            '<%= yeoman.dist %>/styles/{,*/}*.css',
-            '<%= yeoman.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-            '<%= yeoman.dist %>/styles/fonts/*'
+            '<%= crate.dist %>/scripts/{,*/}*.js',
+            '<%= crate.dist %>/styles/{,*/}*.css',
+            '<%= crate.dist %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+            '<%= crate.dist %>/styles/fonts/*'
           ]
         }
       }
     },
     useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
+      html: '<%= crate.app %>/index.html',
       options: {
-        dest: '<%= yeoman.dist %>'
+        dest: '<%= crate.dist %>'
       }
     },
     usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+      html: ['<%= crate.dist %>/{,*/}*.html'],
+      css: ['<%= crate.dist %>/styles/{,*/}*.css'],
       options: {
-        dirs: ['<%= yeoman.dist %>']
+        dirs: ['<%= crate.dist %>']
       }
     },
     imagemin: {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>/images',
+          cwd: '<%= crate.app %>/images',
           src: '{,*/}*.{png,jpg,jpeg}',
-          dest: '<%= yeoman.dist %>/images'
+          dest: '<%= crate.dist %>/images'
         }]
       }
     },
@@ -213,9 +132,9 @@ module.exports = function (grunt) {
       // Usemin blocks.
       // dist: {
       //   files: {
-      //     '<%= yeoman.dist %>/styles/main.css': [
-      //       '.tmp/styles/{,*/}*.css',
-      //       '<%= yeoman.app %>/styles/{,*/}*.css'
+      //     '<%= crate.dist %>/styles/main.css': [
+      //       '<%= crate.tmp %>/styles/{,*/}*.css',
+      //       '<%= crate.app %>/styles/{,*/}*.css'
       //     ]
       //   }
       // }
@@ -223,21 +142,22 @@ module.exports = function (grunt) {
     htmlmin: {
       dist: {
         options: {
-          /*removeCommentsFromCDATA: true,
-          // https://github.com/yeoman/grunt-usemin/issues/44
-          //collapseWhitespace: true,
-          collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
-          removeRedundantAttributes: true,
-          useShortDoctype: true,
-          removeEmptyAttributes: true,
-          removeOptionalTags: true*/
+          removeComments: false
+          // removeCommentsFromCDATA: false,
+          // // https://github.com/yeoman/grunt-usemin/issues/44
+          // collapseWhitespace: true,
+          // collapseBooleanAttributes: true,
+          // removeAttributeQuotes: true,
+          // removeRedundantAttributes: true,
+          // useShortDoctype: false,
+          // removeEmptyAttributes: true,
+          // removeOptionalTags: false
         },
         files: [{
           expand: true,
-          cwd: '<%= yeoman.app %>',
+          cwd: '<%= crate.app %>',
           src: ['*.html', 'views/*.html'],
-          dest: '<%= yeoman.dist %>'
+          dest: '<%= crate.dist %>'
         }]
       }
     },
@@ -247,8 +167,8 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           dot: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
+          cwd: '<%= crate.app %>',
+          dest: '<%= crate.dist %>',
           src: [
             '*.{ico,png,txt}',
             '.htaccess',
@@ -258,73 +178,39 @@ module.exports = function (grunt) {
           ]
         }, {
           expand: true,
-          cwd: '.tmp/images',
-          dest: '<%= yeoman.dist %>/images',
+          cwd: '<%= crate.tmp %>/images',
+          dest: '<%= crate.dist %>/images',
           src: [
             'generated/*'
           ]
-        }]
-      },
-      crate_theme: {
-        files: [{
-            cwd: 'tmp/crate-theme-'+CRATE_THEME_VERSION+'/src/crate_theme/bootstrap/',
-            src: 'fonts.less',
-            dest: '<%= yeoman.app %>/styles/',
-            expand: true
-        }, {
-            cwd: 'tmp/crate-theme-'+CRATE_THEME_VERSION+'/src/crate_theme/bootstrap/crate-admin/',
-            src: '{theme,variables,sb-admin,simple-sidebar}.less',
-            dest: '<%= yeoman.app %>/styles/',
-            expand: true
-        }, {
-            cwd: 'tmp/crate-theme-'+CRATE_THEME_VERSION+'/assets/img/',
-            src: '**',
-            dest: '<%= yeoman.app %>/images/',
-            expand: true
-        }, {
-            cwd: 'tmp/crate-theme-'+CRATE_THEME_VERSION+'/assets/fonts/',
-            src: '**',
-            dest: '<%= yeoman.app %>/fonts/',
-            expand: true
         }]
       }
     },
     concurrent: {
       server: [
         'recess',
-        'coffee:dist'
-      ],
-      test: [
-        'coffee',
       ],
       dist: [
-        'coffee',
         'recess',
         'imagemin',
         'htmlmin'
       ]
     },
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js',
-        singleRun: true
-      }
-    },
     ngmin: {
       dist: {
         files: [{
           expand: true,
-          cwd: '<%= yeoman.dist %>/scripts',
+          cwd: '<%= crate.dist %>/scripts',
           src: '*.js',
-          dest: '<%= yeoman.dist %>/scripts'
+          dest: '<%= crate.dist %>/scripts'
         }]
       }
     },
     uglify: {
       dist: {
         files: {
-          '<%= yeoman.dist %>/scripts/scripts.js': [
-            '<%= yeoman.dist %>/scripts/scripts.js'
+          '<%= crate.dist %>/scripts/scripts.js': [
+            '<%= crate.dist %>/scripts/scripts.js'
           ]
         }
       }
@@ -332,7 +218,7 @@ module.exports = function (grunt) {
     'string-replace': {
       dist: {
         files: {
-          '<%= yeoman.dist %>/styles/': '*.css',
+          '<%= crate.dist %>/styles/': '*.css',
         },
         options: {
           replacements: [{
@@ -350,84 +236,41 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('downloadCrateTheme', 'download the crate theme and extract less', function () {
-    grunt.log.writeln('starting download of crate-theme-'+CRATE_THEME_VERSION+'...');
-
-    // Tell grunt the task is async
-    var done = this.async();
-
-    var tar = require("tar"),
-        zlib = require('zlib'),
-        fs = require("fs"),
-        request = require('request');
-
-    request('http://download.crate.io/eggs/crate-theme-'+CRATE_THEME_VERSION+'.tar.gz')
-      .pipe(zlib.createGunzip())
-      .pipe(tar.Extract({ path: "tmp" }))
-      .on("error", function (er) {
-        grunt.log.writeln("... error happened: "+er);
-        done(false);
-      })
-      .on("end", function () {
-        grunt.log.writeln('... download and extract done.');
-        done();
-      });
-  });
-
-
-  grunt.registerTask('server', function (target) {
-    if (target === 'dist') {
-      return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+  grunt.registerTask('build', function(target) {
+    if (bower.version != pkg.version) {
+      throw new Error("Version numbers in bower.json and package.json do not match!");
     }
-
     grunt.task.run([
-      'clean:server',
-      'concurrent:server',
-      'connect:livereload',
-      'open',
-      'watch'
+      'clean:dist',
+      'useminPrepare',
+      'concurrent:dist',
+      'concat',
+      'copy:dist',
+      'ngmin',
+      'cssmin',
+      'uglify',
+      'rev',
+      'usemin',
+      'string-replace:dist',
+      'clean:components'
     ]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'concurrent:test',
-    'connect:test',
-    'karma'
-  ]);
-
-  grunt.registerTask('build', [
-    'clean:dist',
-    'useminPrepare',
-    'concurrent:dist',
-    'concat',
-    'copy:dist',
-    'ngmin',
-    'cssmin',
-    'uglify',
-    'rev',
-    'usemin',
-    'string-replace:dist'
-  ]);
-
-  grunt.registerTask('dev_server', [
+  grunt.registerTask('server', [
     'concurrent:server',
     'connect:dev',
-    'watch',
-    'open:server'
+    'open:server',
+    'watch'
+  ]);
+
+  grunt.registerTask('jshint', [
+    'jshint'
   ]);
 
   grunt.registerTask('default', [
-    'setup',
     'jshint',
-    'test',
     'build'
   ]);
 
-  grunt.registerTask('setup', [
-    'clean:crate_theme',
-    'downloadCrateTheme',
-    'copy:crate_theme'
-  ])
 };
 
