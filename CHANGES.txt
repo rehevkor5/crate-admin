@@ -2,8 +2,12 @@
 Changes for Crate Data Admin Interface
 ======================================
 
-2014/04/03 0.4.0dev
-===================
+unreleased
+==========
+
+ - display cluster version in status bar
+
+ - display table summary in table sidebar navigation
 
  - ported from Backbone to Angular
 
