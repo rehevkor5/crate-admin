@@ -8,6 +8,7 @@ angular.module('common', ['stats'])
                     '--': 'label-danger'};
     $scope.cluster_color_label = 'label-default';
     $scope.$watch( function () { return ClusterState.data; }, function (data) {
+      $scope.version = data.version;
       $scope.cluster_state = data.status;
       $scope.cluster_name = data.name;
       $scope.cluster_color_label = colorMap[data.status];

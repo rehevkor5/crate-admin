@@ -11,22 +11,24 @@ angular.module('stats', ['sql'])
       name: '--',
       status: '--',
       load: ['-.-', '-.-', '-.-'],
-      loadHistory: [[],[],[]]
+      loadHistory: [[],[],[]],
+      version: ''
     };
 
     var refreshInterval = 5000;
     var historyLength = 100;
 
     var checkReachability = function checkReachability(){
-      var baseURI = $.cookie("base_uri") || null;
+      var baseURI = localStorage.getItem("crate.base_uri") || null;
       if (baseURI) {
-        $http.get(baseURI+"/").success(function() {
-          setReachability(true);
+        $http.get(baseURI+"/").success(function(response) {
+          setReachability(true, response.version.number);
         });
       }
     };
 
-    var setReachability = function setReachability(online) {
+    var setReachability = function setReachability(online, version) {
+      data.version = online ? version : '';
       if (data.online && !online) {
         $interval.cancel(healthInterval);
         $interval.cancel(statusInterval);
@@ -152,6 +154,8 @@ angular.module('stats', ['sql'])
         setReachability(false);
       });
     };
+
+    checkReachability();
 
     refreshHealth();
     healthInterval = $interval(refreshHealth, refreshInterval);

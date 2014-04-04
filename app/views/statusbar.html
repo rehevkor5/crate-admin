@@ -1,7 +1,7 @@
 <div ng-controller="StatusBarController">
   <ul class="nav navbar-nav navbar-right navbar-user">
     <li>
-      Cluster: <span class="label label-cluster">{{cluster_name}}</span>
+      Cluster: <span class="label label-cluster">{{cluster_name}} <span ng-show="version">({{ version }})</span></span>
     </li>
     <li>
       Health: <span class="label {{cluster_color_label}}">{{cluster_state}}</span>
@@ -12,6 +12,7 @@
       <span class="label label-load5">{{load5}}</span>/
       <span class="label label-load15">{{load15}}</span>
     </li>
+    <li>&nbsp;</li>
   </ul>
 </div>
 

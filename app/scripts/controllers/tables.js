@@ -114,7 +114,7 @@ angular.module('tables', ['stats', 'sql', 'common'])
             var table = _tables[i];
             var tableInfo = new TableInfo(_shards.filter(function(shard, idx) { return table.name === shard.name; }));
             tableInfo.shards_configured = table.shards_configured;
-
+           
             table.health = tableInfo.health();
             table.health_label_class = colorMapLabel[table.health];
             table.health_panel_class = colorMapPanel[table.health];
@@ -126,6 +126,19 @@ angular.module('tables', ['stats', 'sql', 'common'])
             table.shards_missing = tableInfo.missingShards();
             table.shards_underreplicated = tableInfo.underreplicatedShards();
             table.size = tableInfo.size();
+
+            table.summary = roundWithUnitFilter(table.records_total, 1) + ' Records (' + bytesFilter(table.size) + ') / ' +
+                table.replicas_configured + ' Replicas / ' + table.shards_configured + ' Shards (' + table.shards_started + ' Started)';
+            if (table.records_unavailable) {
+              table.summary = roundWithUnitFilter(table.records_unavailable, 1) + ' Unavailable Records / ' + table.summary;
+            }
+            if (table.shards_missing) {
+              table.summary = table.shards_missing + ' Missing Shards / ' + table.summary;
+            } else if (table.shards_underreplicated) {
+              table.summary = table.shards_underreplicated + ' Underreplicated Shards / ' + table.summary;
+            } else if (table.records_underreplicated) {
+              table.summary = table.records_underreplicated + ' Underreplicated Records / ' + table.summary;
+            }
           };
 
           var currentTable = _tables.filter(function(table, idx) { return table.name === selected_table; });
