@@ -11,13 +11,15 @@ module.exports = function (grunt) {
   var bower = require('./bower.json');
   var pkg = require('./package.json');
 
+  var crateConf = {
+    version: bower.version,
+    app: bower.appPath || 'app',
+    dist: 'dist',
+    tmp: '.tmp'
+  };
+
   grunt.initConfig({
-    crate: {
-      version: bower.version,
-      app: bower.appPath || 'app',
-      dist: 'dist',
-      tmp: '.tmp'
-    },
+    crate: crateConf,
     watch: {
       recess: {
         files: ['<%= crate.app %>/styles/{,*/}*.less'],
@@ -36,16 +38,11 @@ module.exports = function (grunt) {
           keepalive: true,
           middleware: function (connect) {
             return [
-              mountFolder(connect, '<%= crate.tmp %>'),
-              mountFolder(connect, '<%= crate.app %>')
+              mountFolder(connect, crateConf.tmp),
+              mountFolder(connect, crateConf.app)
             ];
           }
         }
-      }
-    },
-    open: {
-      server: {
-        url: 'http://<%= connect.options.hostname %>:<%= connect.options.port %>/<%= connect.options.path %>'
       }
     },
     clean: {
@@ -259,7 +256,6 @@ module.exports = function (grunt) {
   grunt.registerTask('server', [
     'concurrent:server',
     'connect:dev',
-    'open:server',
     'watch'
   ]);
 
