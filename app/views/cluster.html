@@ -11,17 +11,19 @@
             <h1>Cluster Overview</h1>
             <div id="menu-toggle" ng-click="toggleSidebar()" class="btn btn-default"><i class="icon-reorder"></i></div>
           </div>
-	</div>
+        </div>
       </div>
 
       <div class="row">
 
         <div class="col-md-6 col-sm-6">
-	  <div id="graph-mem" style="width:200px;"></div>
+          <p class="announcement-heading">Memory Usage</p>
+          <diagram-coxcomb diagramconfig="memDiagram"></diagram-coxcomb>
         </div>
 
         <div class="col-md-6 col-sm-6">
-	  <div id="graph-fs" style="width:200px;"></div>
+          <p class="announcement-heading">Disk Usage</p>
+          <diagram-coxcomb diagramconfig="fsDiagram"></diagram-coxcomb>
         </div>
 
       </div>

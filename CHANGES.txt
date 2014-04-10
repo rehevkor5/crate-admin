@@ -4,6 +4,8 @@ Changes for Crate Data Admin Interface
 
  - added history support in admin console
 
+ - added cluster overview page with two diagrams
+
 2014/04/08 0.5.1
 ================
 
@@ -13,9 +15,9 @@ Changes for Crate Data Admin Interface
 ================
 
  - display blob tables
- 
+
  - fix: prevent logo from overlapping sidebar navigation
- 
+
 2014/04/08 0.4.4
 ================
 
