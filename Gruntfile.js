@@ -53,7 +53,7 @@ module.exports = function (grunt) {
           dot: true,
           src: [
             '<%= crate.tmp %>',
-            '<%= crate.dist %>',
+            '<%= crate.dist %>'
           ]
         }]
       },
@@ -160,7 +160,7 @@ module.exports = function (grunt) {
           dest: '<%= crate.dist %>/fonts',
           src: [
             'bower_components/font-awesome/fonts/*',
-            'bower_components/bootstrap/dist/fonts/*',
+            'bower_components/bootstrap/dist/fonts/*'
           ]
         }, {
           expand: true,
@@ -174,7 +174,7 @@ module.exports = function (grunt) {
     },
     concurrent: {
       server: [
-        'recess',
+        'recess'
       ],
       dist: [
         'recess',
@@ -204,7 +204,7 @@ module.exports = function (grunt) {
     'string-replace': {
       dist: {
         files: {
-          '<%= crate.dist %>/styles/': '<%= crate.dist %>/styles/*.css',
+          '<%= crate.dist %>/styles/': '<%= crate.dist %>/styles/*.css'
         },
         options: {
           replacements: [{

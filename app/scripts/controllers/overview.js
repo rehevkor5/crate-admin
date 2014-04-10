@@ -66,21 +66,24 @@ angular.module('overview', ['stats', 'sql', 'common', 'tableinfo'])
         for (var i=0; i<lh.length; i++) d.push([i, lh[i]]);
         data.push(d);
       }
-      $.plot($('#load-graph'), [{label: 'cluster load', data: data[0], color: '#676767'}], {
-          series: {
-              shadowSize: 0,
-              points: { show: true }
-          },
-          lines: { show: true, fill: true },
-          yaxis: {
-              min: 0
-          },
-          xaxis: {
-              min: 0,
-              max: 100,
-              show: false
-          }
-      }).draw();
+
+	var w = 400,
+	    h = 200,
+	    margin = 20,
+	    y = d3.scale.linear().domain([0, d3.max(data)]).range([0 + margin, h - margin]),
+	    x = d3.scale.linear().domain([0, data.length]).range([0 + margin, w - margin]);
+
+	var vis = d3.select("body")
+		.append("svg:svg")
+		.attr("width", w)
+		.attr("height", h);
+
+	var g = vis.append("svg:g")
+		.attr("transform", "translate(0, 200)");
+
+	var line = d3.svg.line()
+		.x(function(d,i) { return x(i); })
+		.y(function(d) { return -1 * y(d); });
     };
 
     // bind tooltips
