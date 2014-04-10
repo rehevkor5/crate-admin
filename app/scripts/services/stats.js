@@ -47,7 +47,7 @@ angular.module('stats', ['sql'])
         healthInterval = $interval(refreshHealth, refreshInterval);
         statusInterval = $interval(refreshState, refreshInterval);
       }
-    }
+    };
 
     var addToLoadHistory = function(load) {
       if (load.length != data.loadHistory.length) return;
@@ -60,13 +60,19 @@ angular.module('stats', ['sql'])
 
     var refreshHealth = function() {
       if (!data.online) return;
-      
+
       var clusterQuery = SQLQuery.execute(
         'select id, name, hostname, port, load, mem, fs from sys.nodes');
       clusterQuery.success(function(sqlQuery) {
-        data.cluster = $.map(sqlQuery.rows, function(obj, idx){
-          return _object(['id', 'name', 'hostname', 'port', 'load', 'mem', 'fs'], obj);
-        });
+          var nodes = queryResultToObjects(sqlQuery,
+					     ['id', 'name', 'hostname', 'port', 'load', 'mem', 'fs']);
+	  for (var i=0; i<nodes.length; i++) {
+	      var node = nodes[i];
+	      node.mem.total = node.mem.free + node.mem.used;
+	      node.mem.used_percent = node.mem.used * 100 / node.mem.total;
+	      node.mem.free_percent = node.mem.free * 100 / node.mem.total;
+	  }
+	  data.cluster = nodes;
       }).error(function(sqlQuery) {
         setReachability(false);
       });

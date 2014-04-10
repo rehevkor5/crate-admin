@@ -42,7 +42,6 @@ angular.module('node', ['stats'])
 	    this.status = this.getStatus(this.value);
 	};
 
-
 	var compareListByHealth = function compareListByHealth(a,b) {
 	    if (healthPriorityMap[a.health.status] < healthPriorityMap[b.health.status]) return -1;
 	    if (healthPriorityMap[a.health.status] > healthPriorityMap[b.health.status]) return 1;
@@ -51,8 +50,10 @@ angular.module('node', ['stats'])
 	    return 0;
 	};
 
-	$scope.$watch(function () { return ClusterState.data; }, function (data) {
-	    var cluster = ClusterState.data.cluster;
+	$scope.$watch(function () {
+	    return ClusterState.data;
+	}, function (data) {
+	    var cluster = data.cluster;
 	    var showSidebar = cluster.length > 0;
 
 	    $scope.renderSidebar = showSidebar;
