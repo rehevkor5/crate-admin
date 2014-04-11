@@ -77,24 +77,32 @@ angular.module('node', ['stats'])
 	    }
 	    $scope.nodes = nodeList;
 
-        if (selectedNode){
-            $scope.fsDiagram = {
-                data: {
-                    used: 100,
-                    free: 100
-                },
-                causes: ['used', 'free'],
-                size: 200
-            };
-            $scope.memDiagram = {
-                data: {
-                    used: 122,
-                    free: 22
-                },
-                causes: ['used', 'free'],
-                size: 200
-            };
-        }
+	  var fs = $scope.node.fs,
+	      mem = $scope.node.mem;
+          if (selectedNode){
+              $scope.fsDiagram = {
+                  data: [{
+		    'label': 'used',
+		    'value': fs.used
+		  },{
+		    'label': 'free',
+		    'value': fs.free
+		  }],
+                  size: 180,
+		  colors: ['#ff5151','#00c561']
+              };
+              $scope.memDiagram = {
+                  data: [{
+		    'label': 'used',
+		    'value': mem.used
+		  },{
+		    'label': 'free',
+		    'value': mem.free
+		  }],
+                  size: 180,
+		  colors: ['#ff5151','#00c561']
+              };
+          }
 	}, true);
 
 	var prepareNodeList = function prepareNodeList(cluster) {
