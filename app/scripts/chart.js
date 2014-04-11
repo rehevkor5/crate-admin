@@ -68,7 +68,8 @@ Chart.rose = function() {
       return {
 	'angle': angle.call(data, d, i),
 	'area': area.call(data, d, i),
-	'label': label.call(data, d, i)
+	'label': label.call(data, d, i),
+	'data': d
       };
     });
 
@@ -80,7 +81,8 @@ Chart.rose = function() {
 	'label': d.label,
 	'radius': d.area.map( function(area) {
 	  return Math.sqrt( area*numWedges / Math.PI );
-	})
+	}),
+	'data': d.data
       };
     });
   }; // end FUNCTION formatData()
@@ -123,8 +125,13 @@ Chart.rose = function() {
 
     // Create the wedge groups:
     wedgeGroups = graph.selectAll('.wedgeGroup')
-      .data( data )
-      .enter().append('svg:g')
+      .data(data)
+      .enter()
+      .append("svg:a")
+      .attr("xlink:href", function(d) {
+	  return d.data.url;
+      })
+      .append('svg:g')
       .attr('class', 'wedgeGroup')
       .attr('transform', 'scale(0,0)');
 
@@ -132,7 +139,6 @@ Chart.rose = function() {
     wedges = wedgeGroups.selectAll('.wedge')
       .data( function(d) {
 	var ids = d3.range(0, legend.length);
-
 	ids.sort( function(a,b) {
 	  var val2 = d.radius[b],
 	      val1 = d.radius[a];
@@ -142,14 +148,20 @@ Chart.rose = function() {
 	  return {
 	    'legend': legend[i],
 	    'radius': d.radius[i],
-	    'angle': d.angle
+	    'angle': d.angle,
+	    'data': d.data
 	  };
 	});
       })
       .enter().append('svg:path')
       .attr('class', function(d) { return 'wedge ' + d.legend; })
-      .attr('d', arc );
-
+      .attr('d', arc )
+      .on("mouseover", function(d, i) {
+	d3.select(this).classed("highlighted", true);
+      })
+      .on("mouseout", function(d, i){
+	d3.select(this).classed("highlighted", false);
+      });
     wedgeGroups.attr('transform', 'scale(1,1)');
 
 

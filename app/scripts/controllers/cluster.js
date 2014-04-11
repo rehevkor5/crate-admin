@@ -25,9 +25,6 @@ angular.module('cluster', ['stats'])
 	    }
     };
 
-    $scope.fs_diagram = null;
-    $scope.mem_diagram = null;
-
 	$scope.$watch(function () {
 	    return ClusterState.data;
 	}, function (data) {
@@ -49,13 +46,15 @@ angular.module('cluster', ['stats'])
 	    	    "_id": i+1,
 	    	    "label": item.name,
 	    	    "used": item.mem.used,
-	    	    "total": item.mem.total
+	    	    "total": item.mem.total,
+		    "url": "#/nodes/"+item.name
 	    	});
 	    	fsData.push({
 	    	    "_id": i+1,
 	    	    "label": item.name,
 	    	    "used": item.fs.used,
-	    	    "total": item.fs.total
+	    	    "total": item.fs.total,
+		    "url": "#/nodes/"+item.name
 	    	});
 	    }
 
