@@ -150,60 +150,8 @@ Chart.rose = function() {
       .attr('class', function(d) { return 'wedge ' + d.legend; })
       .attr('d', arc );
 
-    // Append title tooltips:
-    wedges.append('svg:title')
-      .text( function(d) { return d.legend + ': ' + Math.floor(Math.pow(d.radius,2) * Math.PI / numWedges); });
+    wedgeGroups.attr('transform', 'scale(1,1)');
 
-    // Transition the wedges to view:
-    wedgeGroups.transition()
-      .delay( delay )
-      .duration( function(d,i) {
-	return duration*i;
-      })
-      .attr('transform', 'scale(1,1)');
-
-    // Append labels to the wedgeGroups:
-    var numLabels = d3.selectAll('.label-path')[0].length;
-
-    wedgeGroups.selectAll('.label-path')
-      .data( function(d,i) {
-	return [
-	  {
-	    'index': i,
-	    'angle': d.angle,
-	    'radius': d3.max( d.radius.concat( [23] ) )
-	  }
-	];
-      } )
-      .enter().append('svg:path')
-      .attr('class', 'label-path')
-      .attr('id', function(d) {
-	return 'label-path' + (d.index + numLabels);
-      })
-      .attr('d', arc)
-      .attr('fill', 'none')
-      .attr('stroke', 'none');
-
-    wedgeGroups.selectAll('.label')
-      .data( function(d,i) {
-	return [
-	  {
-	    'index': i,
-	    'label': d.label
-	  }
-	];
-      } )
-      .enter().append('svg:text')
-      .attr('class', 'label')
-      .attr('text-anchor', 'start')
-      .attr('x', 5)
-      .attr('dy', '-.71em')
-      .attr('text-align', 'center')
-      .append('textPath')
-      .attr('xlink:href', function(d,i) {
-	return '#label-path' + (d.index + numLabels);
-      })
-      .text( function(d) { return d.label; } );
 
   }; // end FUNCTION createWedges()
 

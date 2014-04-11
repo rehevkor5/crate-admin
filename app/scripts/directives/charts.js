@@ -30,8 +30,6 @@ angular.module('charts', ['stats'])
           rose.legend(config.causes)
             .width(config.size)
             .height(config.size)
-            .delay(0)
-            .duration(0)
             .domain( [0, maxRadius] )
             .angle( function(d) {
               return -d._id; // minus for reverse direction
@@ -111,17 +109,125 @@ angular.module('charts', ['stats'])
               return color(d.data.label);
             });
 
-          g.append("text")
-            .attr("transform", function(d) {
-              return "translate(" + arc.centroid(d) + ")";
-            })
-            .attr("dy", ".35em")
-            .style("text-anchor", "middle")
-            .text(function(d) {
-              return d.data.label;
-            });
+	  if (config.showLabels) {
+            g.append("text")
+              .attr("transform", function(d) {
+		return "translate(" + arc.centroid(d) + ")";
+              })
+              .attr("dy", ".35em")
+              .style("text-anchor", "middle")
+              .text(function(d) {
+		return d.data.label;
+              });
+	  }
 
         };
+        $scope.$watch('diagramconfig', function(new_val){
+          if (!new_val) return;
+          if (this._drawn == true) return;
+          this._drawn = true;
+          drawGraph(new_val);
+        }, true);
+      }
+    };
+  }])
+  .directive('diagramLine', [function(){
+    // http://bl.ocks.org/mbostock/1166403
+    return{
+      restrict: 'E',
+      templateUrl: '/views/diagramcoxcomb.html',
+      scope: {
+        diagramconfig: '='
+      },
+      link: function($scope, element){
+        $scope.id = Math.round(Math.random()*1000000);
+        var drawGraph = function drawGraph(config){
+	  var data = [],
+	      counter = 0,
+	      now = new Date().getTime(),
+	      d = config.data[0];
+	  for (var i=0; i<d.length; i++){
+	    data.push({
+		date: now-1000*counter,
+	        value: d[i]
+	    });
+	    counter++;
+	  }
+	  console.log(data);
+          var target = $("#"+$scope.id)[0];
+          $(target).empty();
+
+          var width = config.width,
+              height = config.height;
+
+          var colorRange = config.colors || ["#98abc5", "#8a89a6", "#7b6888",
+                                             "#6b486b", "#a05d56", "#d0743c",
+                                             "#ff8c00"];
+          var color = d3.scale.ordinal()
+                .range(colorRange);
+
+	  var x = d3.scale.linear().domain([0, 100]).range([0, width]),
+	      y = d3.scale.linear().domain([0, 10]).range([height, 0]),
+	      xAxis = d3.svg.axis().scale(x).tickSize(-height).tickSubdivide(true),
+	      yAxis = d3.svg.axis().scale(y).ticks(4).orient("right");
+
+	  var area = d3.svg.area()
+		.interpolate("monotone")
+		.x(function(d) { return x(d.date); })
+		.y0(height)
+		.y1(function(d) { return y(d.value); });
+
+	  // A line generator, for the dark stroke.
+	  var line = d3.svg.line()
+		.interpolate("monotone")
+		.x(function(d) { return x(d.date); })
+		.y(function(d) { return y(d.value); });
+
+          var svg = d3.select(target).append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g");
+
+	  // Add the clip path.
+	  svg.append("clipPath")
+	    .attr("id", "clip")
+	    .append("rect")
+	    .attr("width", width)
+	    .attr("height", height);
+
+	  // Add the area path.
+	  svg.append("path")
+	    .attr("class", "area")
+	    .attr("clip-path", "url(#clip)")
+	    .attr("d", area(data));
+
+	  // Add the x-axis.
+	  svg.append("g")
+	    .attr("class", "x axis")
+	    .attr("transform", "translate(0," + height + ")")
+	    .call(xAxis);
+
+	  // Add the y-axis.
+	  svg.append("g")
+	    .attr("class", "y axis")
+	    .attr("transform", "translate(" + width + ",0)")
+	    .call(yAxis);
+
+	  // Add the line path.
+	  svg.append("path")
+	    .attr("class", "line")
+	    .attr("clip-path", "url(#clip)")
+	    .attr("d", line(data));
+
+	  // Add a small label for the symbol name.
+	  svg.append("text")
+	    .attr("x", width - 6)
+	    .attr("y", height - 6)
+	    .style("text-anchor", "end")
+	    .text(data[0].symbol);
+
+        };
+
         $scope.$watch('diagramconfig', function(new_val){
           if (!new_val) return;
           if (this._drawn == true) return;

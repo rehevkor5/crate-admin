@@ -56,35 +56,17 @@ angular.module('overview', ['stats', 'sql', 'common', 'tableinfo'])
         $scope.available_data = 100.0;
       }
 
-      drawGraph(data.loadHistory);
+      $scope.history = {
+	data: [
+	  [0.3, 1.1, 1.2, 1.3, 1.4, 1.5, 1.2, 1.3, 1.4, 1.3, 1.2, 1.1, 0.8, 0.6],
+	  [1.3, 2.1, 2.2, 2.3, 2.4, 2.5, 2.2, 2.3, 2.4, 2.3, 2.2, 2.1, 1.8, 1.6],
+	  [2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.2, 3.3, 3.4, 3.3, 3.2, 3.1, 2.8, 2.6]
+	],
+	width: 600,
+	height: 300
+      };
+
     }, true);
-
-    var drawGraph = function drawGraph(history) {
-      var data = [];
-      for (var j=0; j<history.length; j++) {
-        var lh = history[j], d = [];
-        for (var i=0; i<lh.length; i++) d.push([i, lh[i]]);
-        data.push(d);
-      }
-
-	var w = 400,
-	    h = 200,
-	    margin = 20,
-	    y = d3.scale.linear().domain([0, d3.max(data)]).range([0 + margin, h - margin]),
-	    x = d3.scale.linear().domain([0, data.length]).range([0 + margin, w - margin]);
-
-	var vis = d3.select("body")
-		.append("svg:svg")
-		.attr("width", w)
-		.attr("height", h);
-
-	var g = vis.append("svg:g")
-		.attr("transform", "translate(0, 200)");
-
-	var line = d3.svg.line()
-		.x(function(d,i) { return x(i); })
-		.y(function(d) { return -1 * y(d); });
-    };
 
     // bind tooltips
     $("[rel=tooltip]").tooltip({ placement: 'top'});

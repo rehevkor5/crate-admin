@@ -89,7 +89,8 @@ angular.module('node', ['stats'])
 		    'value': fs.free
 		  }],
                   size: 180,
-		  colors: ['#ff5151','#00c561']
+		  colors: ['#ff5151','#efefef'],
+		  showLabels: false
               };
               $scope.memDiagram = {
                   data: [{
@@ -100,7 +101,8 @@ angular.module('node', ['stats'])
 		    'value': mem.free
 		  }],
                   size: 180,
-		  colors: ['#ff5151','#00c561']
+		  colors: ['#ff5151','#efefef'],
+		  showLabels: false
               };
           }
 	}, true);
