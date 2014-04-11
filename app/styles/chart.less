@@ -21,37 +21,39 @@
 }
 
 .wedge {
-	stroke: #cdcdcd;
+	stroke: darken(@gray-lighter, 20%);
 	stroke-width: 1px;
 }
 
 .used {
 	fill: @brand-danger;
 }
-.used.highlighted {
-	fill: darken(@brand-danger, 20%);
-}
 
 .free {
 	fill: @brand-success;
 }
-.free.highlighted {
-	fill: darken(@brand-success, 20%);
+
+.highlighted {
+    .free {
+	fill: darken(@brand-success, 10%);
+    }
+    .used {
+	fill: darken(@brand-danger, 10%);
+    }
+    .total {
+	fill: darken(@gray-lighter, 10%);
+    }
+    .other {
+	fill: darken(@gray, 10%);
+    }
 }
 
 .other {
 	fill: @gray;
 }
-.other.highlighted {
-	fill: darken(@gray, 20%);
-}
 
 .total {
 	fill: @gray-lighter;
-}
-
-.total.highlighted {
-	fill: darken(@gray-lighter, 20%);
 }
 
 .legend {

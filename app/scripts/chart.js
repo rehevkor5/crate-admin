@@ -133,6 +133,14 @@ Chart.rose = function() {
       })
       .append('svg:g')
       .attr('class', 'wedgeGroup')
+      .on("mouseover", function(d, i) {
+	var self = d3.select(this);
+	self.classed("highlighted", true);
+      })
+      .on("mouseout", function(d, i){
+	var self = d3.select(this);
+	self.classed("highlighted", false);
+      })
       .attr('transform', 'scale(0,0)');
 
     // Create the wedges:
@@ -155,13 +163,7 @@ Chart.rose = function() {
       })
       .enter().append('svg:path')
       .attr('class', function(d) { return 'wedge ' + d.legend; })
-      .attr('d', arc )
-      .on("mouseover", function(d, i) {
-	d3.select(this).classed("highlighted", true);
-      })
-      .on("mouseout", function(d, i){
-	d3.select(this).classed("highlighted", false);
-      });
+      .attr('d', arc );
     wedgeGroups.attr('transform', 'scale(1,1)');
 
 
