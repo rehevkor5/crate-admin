@@ -77,9 +77,9 @@ angular.module('node', ['stats'])
 	    }
 	    $scope.nodes = nodeList;
 
-	  var fs = $scope.node.fs,
-	      mem = $scope.node.mem;
-          if (selectedNode){
+          if ($scope.node && selectedNode){
+	    var fs = $scope.node.fs,
+		mem = $scope.node.mem;
               $scope.fsDiagram = {
                   data: [{
 		    'label': 'used',

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('diagramcoxcomb', ['stats'])
+angular.module('charts', ['stats'])
   .directive('diagramCoxcomb', [function() {
     return {
       restrict: 'E',
@@ -57,9 +57,7 @@ angular.module('diagramcoxcomb', ['stats'])
         }, true);
       }
     };
-  }]);
-
-angular.module('diagrampie', ['stats'])
+  }])
   .directive('diagramPie', [function(){
     // http://bl.ocks.org/mbostock/3887235
     return{
@@ -75,8 +73,6 @@ angular.module('diagrampie', ['stats'])
 
           var target = $("#"+$scope.id)[0];
           $(target).empty();
-
-          console.log("draw pie chart in target", target);
 
           var width = config.size,
               height = config.size,
