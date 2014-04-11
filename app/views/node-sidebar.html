@@ -3,7 +3,7 @@
   <div id="sidebar-wrapper" class="sidebar-350" ng-show="renderSidebar">
 
     <ul class="nav nav-tabs">
-      <li ng-repeat="node in nodes track by $index" ng-class="{ 'active': isActive(node.name)}"><a href="#/nodes/{{node.name}}" data-toggle="tab">
+      <li ng-repeat="node in nodes track by $index" ng-class="{ 'active': isActive(node.name)}"><a href="#/nodes/{{node.name}}">
         <div class="row">
           <div class="col-md-8 col-sm-8">
             <h3><span class="{{node.health_label_class}}">{{node.name}}</span></h3>
