@@ -48,6 +48,10 @@
       <div ng-show="renderTable" class="query-result-container">
         <p></p>
         <h2>Result from query</h2>
+        <div ng-show="renderGraph">
+          <div id="results-graph" style="height:300px; width:800px;"></div>
+          <p></p>
+        </div>
         <div class="table-responsive">
           <table class="table table-bordered table-hover tablesorter table-code">
             <thead>

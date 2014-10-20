@@ -80,6 +80,26 @@ angular.module('console', ['sql'])
         var useLocalStorage = !!parseInt(doStoreQueries);
         getRecentQueriesFromLocalStorage();
 
+        var drawGraph = function drawGraph(data) {
+          $.plot($("#results-graph"), [{label: 'Histogram', data: data}], {
+            series: {
+              shadowSize: 0,
+              points: { show: false }
+            },
+            lines: { show: true, fill: true },
+            yaxis: {},
+            xaxis: {}
+          }).draw();
+        };
+
+        var canDrawGraphFromRows = function(rows){
+          if (rows.length < 1) return false;
+          var cols = rows[0];
+          return cols.reduce(function(memo, obj, idx){
+                   console.log(obj, memo && !isNaN(obj));
+                   return memo && !isNaN(obj);
+                 }, true);
+        };
 
         this.execute = function(sql) {
           var stmt = sql.replace(/^\s+|\s+$/g, '');
@@ -107,6 +127,12 @@ angular.module('console', ['sql'])
             }
 
             $scope.rows = sqlQuery.rows;
+            if (canDrawGraphFromRows(sqlQuery.rows)) {
+              drawGraph(sqlQuery.rows);
+              $scope.renderGraph = true;
+            } else {
+              $scope.renderGraph = false;
+            }
             $scope.status = sqlQuery.status();
             $scope.statement = stmt + ";";
 
@@ -116,6 +142,7 @@ angular.module('console', ['sql'])
             loadingIndicator.stop();
             $scope.error.hide = false;
             $scope.renderTable = false;
+            $scope.renderGraph = false;
             $scope.error.message = sqlQuery.error.message;
             $scope.status = sqlQuery.status();
             $scope.rows = [];
